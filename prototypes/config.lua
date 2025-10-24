@@ -11,7 +11,7 @@ M.streams = {
   research_bioflux = { requires_space_age = true, items={"bioflux"}, icon_tech="bioflux" },
   research_quantum_processor = { requires_space_age = true, items={"quantum-processor"}, icon_tech="quantum-processor" },
 
-  research_plastic = { items={"plastic-bar"}, icon_tech="plastics" },
+  research_plastic = { hide_in_space_age = true, items={"plastic-bar"}, icon_tech="plastics" },
   research_sulfur  = { items={"sulfur"}, icon_tech="sulfur-processing" },
   research_batteries = { items={"battery"}, icon_tech="battery" },
   research_explosives = { items={"explosives"}, icon_tech="explosives" },
@@ -22,10 +22,10 @@ M.streams = {
 
   research_electronic_circuit = { items={"electronic-circuit"}, icon_tech="electronics" },
   research_advanced_circuit = { items={"advanced-circuit"}, icon_tech="advanced-circuit" },
-  research_processing_unit = { items={"processing-unit"}, icon_tech="advanced-electronics-2" },
+  research_processing_unit = { hide_in_space_age = true, items={"processing-unit"}, icon_tech="advanced-electronics-2" },
 
-  research_low_density_structure = { items={"low-density-structure"}, icon_tech="low-density-structure" },
-  research_rocket_fuel = { items={"rocket-fuel"} },
+  research_low_density_structure = { hide_in_space_age = true, items={"low-density-structure"}, icon_tech="low-density-structure" },
+  research_rocket_fuel = { hide_in_space_age = true, items={"rocket-fuel"} },
 
   research_copper = { items={"copper-plate"}, icon_item="copper-plate" },
   research_iron   = { items={"iron-plate"}, icon_item="iron-plate" },
