@@ -1,0 +1,12 @@
+{
+  "name": "more-infinite-research",
+  "version": "1.0.0",
+  "title": "More Infinite Research",
+  "author": "julesc013",
+  "description": "Adds infinite productivity research for intermediates and other useful ingredients not covered by existing vanilla, Space Age, or modded productivity researches. \nAdds Space Age productivity techs to the vanilla base game where missing. \n Each technology can be individually disabled if you don't like them.",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base >= 2.0",
+    "? space-age"
+  ]
+}

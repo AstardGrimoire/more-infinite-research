@@ -1,0 +1,102 @@
+
+local M = {}
+
+M.shared = {
+  per_level_default = 0.10,
+  base_cost      = 8000,
+  growth_factor  = 2,
+  research_time  = 60
+}
+
+M.streams = {
+  -- Space Age breeding: fish + biter eggs + pentapod eggs, and cultivation lines
+  research_breeding = {
+    requires_space_age = true,
+    items = {"raw-fish","biter-egg","pentapod-egg"},
+    mode = "by_category_or_match",
+    match = { categories={"biochamber"}, name_patterns={"cultivation","culture"} },
+    icon_tech = "fish-breeding"
+  },
+
+  -- core intermediates
+  research_plastic              = { items={"plastic-bar"},        icon_tech="plastics" },
+  research_sulfur               = { items={"sulfur"},             icon_tech="sulfur-processing" },
+  research_batteries            = { items={"battery"},            icon_tech="battery" },
+  research_explosives           = { items={"explosives"},         icon_tech="explosives" },
+  research_gears                = { items={"iron-gear-wheel"},    icon_item="iron-gear-wheel" },
+  research_iron_sticks          = { items={"iron-stick"},         icon_item="iron-stick" },
+  research_copper_cable         = { items={"copper-cable"},       icon_item="copper-cable" },
+  research_electronic_circuit   = { items={"electronic-circuit"}, icon_tech="electronics" },
+  research_advanced_circuit     = { items={"advanced-circuit"},   icon_tech="advanced-circuit" },
+
+  -- items Space Age adds in vanilla; we add if absent
+  research_processing_unit      = { items={"processing-unit"},         icon_tech="advanced-electronics-2" },
+  research_low_density_structure= { items={"low-density-structure"},   icon_tech="low-density-structure" },
+  research_rocket_fuel          = { items={"rocket-fuel"},             icon_tech="rocketry" },
+
+  -- metals and late intermediates
+  research_copper               = { items={"copper-plate"},        icon_item="copper-plate" },
+  research_iron                 = { items={"iron-plate"},          icon_item="iron-plate" },
+  research_engine               = { items={"engine-unit"},         icon_tech="engine" },
+  research_electric_engine      = { items={"electric-engine-unit"}, icon_tech="electric-engine" },
+  research_flying_robot_frame   = { items={"flying-robot-frame"},  icon_tech="robotics" },
+
+  -- overhaul/space-age items
+  research_tungsten             = { items={"tungsten-plate","tungsten-carbide"}, icon_item="tungsten-plate", icon_tech="tungsten-processing" },
+  research_holmium              = { requires_space_age = true, items={"holmium-plate"},       icon_tech="holmium-processing" },
+  research_supercapacitor       = { requires_space_age = true, items={"supercapacitor"},      icon_tech="supercapacitor" },
+  research_superconductor       = { requires_space_age = true, items={"superconductor"},      icon_tech="superconductor" },
+  research_bioflux              = { requires_space_age = true, items={"bioflux"},             icon_tech="bioflux" },
+  research_carbon_fiber         = { items={"carbon-fiber"},        icon_tech="carbon-fiber" },
+  research_lithium              = { items={"lithium-plate"},       icon_tech="lithium-processing" },
+  research_quantum_processor    = { requires_space_age = true, items={"quantum-processor"},   icon_tech="quantum-processor" },
+
+  -- merged categories
+  research_modules = {
+    icon_tech="productivity-module",
+    groups = {
+      { change=0.10, items={"productivity-module","speed-module","efficiency-module"} },
+      { change=0.05, items={"productivity-module-2","speed-module-2","efficiency-module-2"} },
+      { change=0.02, items={"productivity-module-3","speed-module-3","efficiency-module-3"} },
+      { change=0.01, item_patterns={"%-module%-4$"} }
+    }
+  },
+  research_belts = {
+    icon_tech="logistics",
+    groups = {
+      { change=0.10, items={"transport-belt","underground-belt","splitter"} },
+      { change=0.05, items={"fast-transport-belt","fast-underground-belt","fast-splitter"} },
+      { change=0.02, items={"express-transport-belt","express-underground-belt","express-splitter"} },
+      { change=0.01, item_patterns={"^turbo%-%a+belt","^turbo%-%a+splitter","^ultimate%-%a+belt","^ultimate%-%a+splitter"} }
+    }
+  },
+  research_inserters = {
+    icon_tech="fast-inserter",
+    groups = {
+      { change=0.10, items={"inserter","burner-inserter"} },
+      { change=0.05, items={"fast-inserter","long-handed-inserter"} },
+      { change=0.02, items={"bulk-inserter"}, item_patterns={"bulk%-inserter"} },
+      { change=0.01, items={"stack-inserter"}, item_patterns={"stack%-inserter"} }
+    }
+  },
+  research_bullets = {
+    icon_tech="military",
+    groups = {
+      { change=0.10, items={"firearm-magazine","shotgun-shell"} },
+      { change=0.05, items={"piercing-rounds-magazine","piercing-shotgun-shell"} },
+      { change=0.02, items={"uranium-rounds-magazine","uranium-shotgun-shell"} },
+      { change=0.01, item_patterns={"^plutonium%-.+magazine$","^plutonium%-.+shotgun%-shell$"} }
+    }
+  },
+  research_rockets = {
+    icon_tech="rocketry",
+    groups = {
+      { change=0.10, items={"rocket"} },
+      { change=0.05, items={"explosive-rocket"} },
+      { change=0.02, items={"atomic-bomb"} },
+      { change=0.01, items={"plutonium-bomb"}, item_patterns={"^plutonium%-bomb$","^plutonium%-.+bomb$"} }
+    }
+  }
+}
+
+return M
