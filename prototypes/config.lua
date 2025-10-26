@@ -37,16 +37,46 @@ M.streams = {
   research_bioflux = { requires_space_age = true, items={"bioflux"}, icon_tech="bioflux" },
   research_breeding = { requires_space_age = true, items = {"raw-fish","biter-egg","pentapod-egg"}, mode = "by_category_or_match", match = { categories={"biochamber"}, name_patterns={"cultivation","culture"} }, icon_tech = "fish-breeding" },
   
-  research_grenades = { icon_item="grenade", groups = { {change=0.10, items={"grenade"}}, {change=0.05, items={"cluster-grenade"}} } },
-  research_walls = { icon_item="stone-wall", groups = { {change=0.10, items={"stone-wall"}}, {change=0.05, items={"gate"}} } },
-  research_rails = { icon_item="rail", items={"rail"} },research_concrete = { icon_tech = "concrete", groups = { { change = 0.10, items = { "stone-brick" } }, { change = 0.05, items = { "concrete", "hazard-concrete" } }, { change = 0.02, items = { "refined-concrete", "refined-hazard-concrete" } } }, exclude_ingredient_patterns={"scrap"} },
+  research_grenades = { icon_item="grenade", groups = { 
+    {change=0.10, items={"grenade"}}, 
+    {change=0.05, items={"cluster-grenade"}} 
+  } },
   
-  research_furnace = { icon_tech = "advanced-material-processing-2", groups = { { change = 0.20, items = { "stone-furnace" } }, { change = 0.10, items = { "steel-furnace" } }, { change = 0.05, items = { "electric-furnace" } }, { change = 0.02, items = { "foundry" }, item_patterns = { "^foundry$" } } } },
-  research_mining_drill = { icon_tech = "electric-mining", icon_item = "electric-mining-drill", groups = { { change = 0.20, items = { "burner-mining-drill" } }, { change = 0.10, items = { "electric-mining-drill" } }, { change = 0.05, items = { "big-mining-drill" }, item_patterns = { "^big%-mining%-drill$" } } } }
-  research_electric_energy = { icon_tech="electric-energy-accumulators", groups = { { change=0.10, items={"solar-panel","accumulator"} } } },
+  research_walls = { icon_item="stone-wall", groups = { 
+    {change=0.10, items={"stone-wall"}}, 
+    {change=0.05, items={"gate"}} 
+  } },
   
-  research_inventory_capacity = { icon_tech = "toolbelt", direct_effects = { { type="character-inventory-slots-bonus", modifier=1 } } },
-  research_robot_battery = { icon_tech = "logistic-robotics", direct_effects = { { type="worker-robot-battery", modifier=0.10 } } },
+  research_rails = { icon_item="rail", items = {"rail"} }, research_concrete = { icon_tech = "concrete", groups = { 
+    { change = 0.10, items = { "stone-brick" } }, 
+    { change = 0.05, items = { "concrete", "hazard-concrete" } }, 
+    { change = 0.02, items = { "refined-concrete", "refined-hazard-concrete" } } 
+  }, exclude_ingredient_patterns={"scrap"} },
+  
+  research_furnace = { icon_tech = "advanced-material-processing-2", groups = { 
+    { change = 0.20, items = { "stone-furnace" } }, 
+    { change = 0.10, items = { "steel-furnace" } }, 
+    { change = 0.05, items = { "electric-furnace" } }, 
+    { change = 0.02, items = { "foundry" }, item_patterns = { "^foundry$" } } 
+  } },
+  
+  research_mining_drill = { icon_tech = "electric-mining", icon_item = "electric-mining-drill", groups = { 
+    { change = 0.20, items = { "burner-mining-drill" } }, 
+    { change = 0.10, items = { "electric-mining-drill" } }, 
+    { change = 0.05, items = { "big-mining-drill" }, item_patterns = { "^big%-mining%-drill$" } } 
+  } }
+  
+  research_electric_energy = { icon_tech="electric-energy-accumulators", groups = { 
+    { change=0.10, items={"solar-panel","accumulator"} } 
+  } },
+  
+  research_inventory_capacity = { icon_tech = "toolbelt", direct_effects = { 
+    { type="character-inventory-slots-bonus", modifier=1 } 
+  } },
+
+  research_robot_battery = { icon_tech = "logistic-robotics", direct_effects = { 
+    { type="worker-robot-battery", modifier=0.10 } 
+  } },
 
   research_bullets = { icon_tech="military", groups = {
     { change=0.10, items={"firearm-magazine","shotgun-shell"} },
@@ -82,7 +112,7 @@ M.streams = {
     { change=0.02, items={"bulk-inserter"}, item_patterns={"bulk%-inserter"} },
     { change=0.01, items={"stack-inserter"}, item_patterns={"stack%-inserter"} }
   }},
-  
+
   research_science_pack_productivity = { icon_tech = "automation-science-pack", groups = {
       { change=0.10, items={
         "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack",
