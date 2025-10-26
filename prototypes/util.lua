@@ -1,5 +1,6 @@
 
 local C = require("prototypes.config")
+local defaults = require("defaults")
 local U = {}
 
 local function has_tool(name) return (data.raw.tool or {})[name] ~= nil end
@@ -7,6 +8,78 @@ local function has_tech(name) return (data.raw.technology or {})[name] ~= nil en
 
 function U.is_space_age() return mods and mods["space-age"] ~= nil end
 function U.enabled_for(key) local s=settings and settings.startup and settings.startup["ips-enable-"..key]; return (not s) or s.value end
+
+local function startup_setting(name)
+  local s = settings and settings.startup and settings.startup[name]
+  if s then return s.value end
+  return nil
+end
+
+local function ensure_minimum(value, fallback, minimum)
+  minimum = minimum or 0
+  if type(value) ~= "number" then return fallback end
+  if value < minimum then return fallback end
+  return value
+end
+
+local function default_base_cost_for(key, spec)
+  if defaults.base_cost and defaults.base_cost[key] ~= nil then return defaults.base_cost[key] end
+  if spec and spec.base_cost then return spec.base_cost end
+  return C.shared.base_cost
+end
+
+local function default_growth_for(key, spec)
+  if defaults.growth_factor and defaults.growth_factor[key] ~= nil then return defaults.growth_factor[key] end
+  if spec and spec.growth_factor then return spec.growth_factor end
+  return C.shared.growth_factor
+end
+
+local function default_max_for(key, spec)
+  if defaults.max_level and defaults.max_level[key] ~= nil then return defaults.max_level[key] end
+  if spec and spec.max_level ~= nil then return spec.max_level end
+  return nil
+end
+
+function U.base_cost_for(key, spec)
+  local default = default_base_cost_for(key, spec)
+  local value = startup_setting("ips-cost-base-"..key)
+  if value ~= nil then return ensure_minimum(value, default, 1) end
+  return ensure_minimum(default, C.shared.base_cost, 1)
+end
+
+function U.growth_factor_for(key, spec)
+  local default = default_growth_for(key, spec)
+  local value = startup_setting("ips-cost-growth-"..key)
+  if value ~= nil then return ensure_minimum(value, default, 1) end
+  return ensure_minimum(default, C.shared.growth_factor, 1)
+end
+
+local function coerce_max_level(value)
+  if value == nil then return nil end
+  if value == "infinite" then return "infinite" end
+  if type(value) == "number" then
+    if value <= 0 then return "infinite" end
+    return math.floor(value)
+  end
+  if type(value) == "string" then
+    local num = tonumber(value)
+    if not num then return "infinite" end
+    if num <= 0 then return "infinite" end
+    return math.floor(num)
+  end
+  return "infinite"
+end
+
+function U.max_level_for(key, spec)
+  local setting_value = startup_setting("ips-max-level-"..key)
+  if setting_value ~= nil then
+    if setting_value <= 0 then return "infinite" end
+    return math.floor(setting_value)
+  end
+  local from_spec = coerce_max_level(default_max_for(key, spec))
+  if from_spec ~= nil then return from_spec end
+  return "infinite"
+end
 
 local function icons_from_tech(name)
   local t = (data.raw.technology or {})[name]
@@ -75,6 +148,7 @@ local EXTRA = {
 
   research_belts               = { "space-science-pack" },
   research_inserters           = { "space-science-pack" },
+  research_inserter_speed      = { "space-science-pack" },
   research_bullets             = { "military-science-pack", "space-science-pack" },
 
   research_inventory_capacity  = { "agricultural-science-pack" },

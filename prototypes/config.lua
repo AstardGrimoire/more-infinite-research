@@ -58,6 +58,14 @@ M.streams = {
     { change=0.02, items={"bulk-inserter"}, item_patterns={"bulk%-inserter"} },
     { change=0.01, items={"stack-inserter"}, item_patterns={"stack%-inserter"} }
   }},
+  research_inserter_speed = {
+    base_cost = 8000,
+    growth_factor = 1.5,
+    icon_item = "stack-inserter",
+    direct_effects = {
+      { type = "stack-inserter-capacity-bonus", modifier = 0.10 }
+    }
+  },
 
   research_bullets = { icon_tech="military", groups = {
     { change=0.10, items={"firearm-magazine","shotgun-shell"} },

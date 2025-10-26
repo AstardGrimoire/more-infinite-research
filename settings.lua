@@ -1,4 +1,30 @@
+local C = require("prototypes.config")
+local defaults = require("defaults")
+
 local settings_data = {}
+
+local function default_base_cost(key, stream)
+  if defaults.base_cost and defaults.base_cost[key] ~= nil then return defaults.base_cost[key] end
+  return (stream and stream.base_cost) or C.shared.base_cost
+end
+
+local function default_growth_factor(key, stream)
+  if defaults.growth_factor and defaults.growth_factor[key] ~= nil then return defaults.growth_factor[key] end
+  return (stream and stream.growth_factor) or C.shared.growth_factor
+end
+
+local function default_max_level_setting(key, stream)
+  local ml
+  if defaults.max_level and defaults.max_level[key] ~= nil then
+    ml = defaults.max_level[key]
+  elseif stream then
+    ml = stream.max_level
+  end
+  if ml == nil or ml == "infinite" then return 0 end
+  local num = tonumber(ml)
+  if not num or num <= 0 then return 0 end
+  return math.floor(num)
+end
 
 table.insert(settings_data, {
   type = "bool-setting",
@@ -6,47 +32,113 @@ table.insert(settings_data, {
   setting_type = "startup",
   default_value = true,
   order = "a-00",
-  localised_name = {"", "Require finishing the game to unlock technologies"}
+  localised_name = {"mod-setting-name.ips-require-space-gate"},
+  localised_description = {"mod-setting-description.ips-require-space-gate"}
 })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_breeding", setting_type="startup", default_value=true, order="a-research_breeding", localised_name={"", "Enable infinite Breeding productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_plastic", setting_type="startup", default_value=true, order="a-research_plastic", localised_name={"", "Enable infinite Plastic productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_sulfur", setting_type="startup", default_value=true, order="a-research_sulfur", localised_name={"", "Enable infinite Sulfur productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_batteries", setting_type="startup", default_value=true, order="a-research_batteries", localised_name={"", "Enable infinite Batteries productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_explosives", setting_type="startup", default_value=true, order="a-research_explosives", localised_name={"", "Enable infinite Explosives productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_gears", setting_type="startup", default_value=true, order="a-research_gears", localised_name={"", "Enable infinite Iron gear wheel productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_iron_sticks", setting_type="startup", default_value=true, order="a-research_iron_sticks", localised_name={"", "Enable infinite Iron stick productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_copper_cable", setting_type="startup", default_value=true, order="a-research_copper_cable", localised_name={"", "Enable infinite Copper cable productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_electronic_circuit", setting_type="startup", default_value=true, order="a-research_electronic_circuit", localised_name={"", "Enable infinite Electronic circuit productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_advanced_circuit", setting_type="startup", default_value=true, order="a-research_advanced_circuit", localised_name={"", "Enable infinite Advanced circuit productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_processing_unit", setting_type="startup", default_value=true, order="a-research_processing_unit", localised_name={"", "Enable infinite Processing unit productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_low_density_structure", setting_type="startup", default_value=true, order="a-research_low_density_structure", localised_name={"", "Enable infinite Low density structure productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_rocket_fuel", setting_type="startup", default_value=true, order="a-research_rocket_fuel", localised_name={"", "Enable infinite Rocket fuel productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_copper", setting_type="startup", default_value=true, order="a-research_copper", localised_name={"", "Enable infinite Copper plate productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_iron", setting_type="startup", default_value=true, order="a-research_iron", localised_name={"", "Enable infinite Iron plate productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_engine", setting_type="startup", default_value=true, order="a-research_engine", localised_name={"", "Enable infinite Engine unit productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_electric_engine", setting_type="startup", default_value=true, order="a-research_electric_engine", localised_name={"", "Enable infinite Electric engine unit productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_flying_robot_frame", setting_type="startup", default_value=true, order="a-research_flying_robot_frame", localised_name={"", "Enable infinite Flying robot frame productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_tungsten", setting_type="startup", default_value=true, order="a-research_tungsten", localised_name={"", "Enable infinite Tungsten productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_holmium", setting_type="startup", default_value=true, order="a-research_holmium", localised_name={"", "Enable infinite Holmium plate productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_supercapacitor", setting_type="startup", default_value=true, order="a-research_supercapacitor", localised_name={"", "Enable infinite Supercapacitor productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_superconductor", setting_type="startup", default_value=true, order="a-research_superconductor", localised_name={"", "Enable infinite Superconductor productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_bioflux", setting_type="startup", default_value=true, order="a-research_bioflux", localised_name={"", "Enable infinite Bioflux productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_carbon_fiber", setting_type="startup", default_value=true, order="a-research_carbon_fiber", localised_name={"", "Enable infinite Carbon fiber productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_lithium", setting_type="startup", default_value=true, order="a-research_lithium", localised_name={"", "Enable infinite Lithium plate productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_quantum_processor", setting_type="startup", default_value=true, order="a-research_quantum_processor", localised_name={"", "Enable infinite Quantum processor productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_modules", setting_type="startup", default_value=true, order="a-research_modules", localised_name={"", "Enable infinite Modules productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_belts", setting_type="startup", default_value=true, order="a-research_belts", localised_name={"", "Enable infinite Belts productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_inserters", setting_type="startup", default_value=true, order="a-research_inserters", localised_name={"", "Enable infinite Inserters productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_bullets", setting_type="startup", default_value=true, order="a-research_bullets", localised_name={"", "Enable infinite Bullet productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_rockets", setting_type="startup", default_value=true, order="a-research_rockets", localised_name={"", "Enable infinite Rocket productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_inventory_capacity", setting_type="startup", default_value=false, order="a-research_inventory_capacity", localised_name={"", "Enable infinite Character inventory slots research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_robot_battery", setting_type="startup", default_value=true, order="a-research_robot_battery", localised_name={"", "Enable infinite Robot battery capacity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_science_pack_productivity", setting_type="startup", default_value=true, order="a-research_science_pack_productivity", localised_name={"", "Enable infinite Science pack productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_walls", setting_type="startup", default_value=true, order="a-research_walls", localised_name={"", "Enable infinite Walls productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_grenades", setting_type="startup", default_value=true, order="a-research_grenades", localised_name={"", "Enable infinite Grenades productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_rails", setting_type="startup", default_value=true, order="a-research_rails", localised_name={"", "Enable infinite Rails productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_electric_energy", setting_type="startup", default_value=true, order="a-research_electric_energy", localised_name={"", "Enable infinite Electric energy productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_concrete", setting_type="startup", default_value=true, order="a-research_concrete", localised_name={"", "Enable infinite Concrete productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_furnace", setting_type="startup", default_value=true, order="a-research_furnace", localised_name={"", "Enable infinite Furnace productivity research"} })
-table.insert(settings_data, { type="bool-setting", name="ips-enable-research_mining_drill", setting_type="startup", default_value=true, order="a-research_mining_drill", localised_name={"", "Enable infinite Mining drill productivity research"} })
+
+local stream_order = {
+  "research_breeding",
+  "research_plastic",
+  "research_sulfur",
+  "research_batteries",
+  "research_explosives",
+  "research_gears",
+  "research_iron_sticks",
+  "research_copper_cable",
+  "research_electronic_circuit",
+  "research_advanced_circuit",
+  "research_processing_unit",
+  "research_low_density_structure",
+  "research_rocket_fuel",
+  "research_copper",
+  "research_iron",
+  "research_engine",
+  "research_electric_engine",
+  "research_flying_robot_frame",
+  "research_tungsten",
+  "research_holmium",
+  "research_supercapacitor",
+  "research_superconductor",
+  "research_bioflux",
+  "research_carbon_fiber",
+  "research_lithium",
+  "research_quantum_processor",
+  "research_modules",
+  "research_belts",
+  "research_inserters",
+  "research_inserter_speed",
+  "research_bullets",
+  "research_rockets",
+  "research_inventory_capacity",
+  "research_robot_battery",
+  "research_science_pack_productivity",
+  "research_walls",
+  "research_grenades",
+  "research_rails",
+  "research_electric_energy",
+  "research_concrete",
+  "research_furnace",
+  "research_mining_drill"
+}
+
+local default_overrides = { research_inventory_capacity = false }
+
+local known = {}
+for _, key in ipairs(stream_order) do known[key] = true end
+
+local extras = {}
+for key, _ in pairs(C.streams) do
+  if not known[key] then table.insert(extras, key) end
+end
+table.sort(extras)
+for _, key in ipairs(extras) do table.insert(stream_order, key) end
+
+for _, key in ipairs(stream_order) do
+  local stream = C.streams[key]
+  if stream then
+    local tech_locale = {"technology-name.more-infinite-research."..key}
+    table.insert(settings_data, {
+      type = "bool-setting",
+      name = "ips-enable-"..key,
+      setting_type = "startup",
+      default_value = default_overrides[key] ~= nil and default_overrides[key] or true,
+      order = "a-"..key,
+      localised_name = {"mod-setting-name.ips-enable-stream", tech_locale},
+      localised_description = {"mod-setting-description.ips-enable-stream", tech_locale}
+    })
+    table.insert(settings_data, {
+      type = "int-setting",
+      name = "ips-cost-base-"..key,
+      setting_type = "startup",
+      default_value = default_base_cost(key, stream),
+      minimum_value = 1,
+      maximum_value = 2147483647,
+      order = "b-"..key.."-base",
+      localised_name = {"mod-setting-name.ips-cost-base-stream", tech_locale},
+      localised_description = {"mod-setting-description.ips-cost-base-stream", tech_locale}
+    })
+    table.insert(settings_data, {
+      type = "double-setting",
+      name = "ips-cost-growth-"..key,
+      setting_type = "startup",
+      default_value = default_growth_factor(key, stream),
+      minimum_value = 1,
+      order = "b-"..key.."-growth",
+      localised_name = {"mod-setting-name.ips-cost-growth-stream", tech_locale},
+      localised_description = {"mod-setting-description.ips-cost-growth-stream", tech_locale}
+    })
+    table.insert(settings_data, {
+      type = "int-setting",
+      name = "ips-max-level-"..key,
+      setting_type = "startup",
+      default_value = default_max_level_setting(key, stream),
+      minimum_value = 0,
+      maximum_value = 2147483647,
+      order = "b-"..key.."-max",
+      localised_name = {"mod-setting-name.ips-max-level-stream", tech_locale},
+      localised_description = {"mod-setting-description.ips-max-level-stream", tech_locale}
+    })
+  end
+end
+
 data:extend(settings_data)

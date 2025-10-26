@@ -3,27 +3,26 @@ local C = require("prototypes.config")
 local U = require("prototypes.util")
 
 local function lname(key, spec)
-  local by_key = {
-    research_bullets = {"", "Bullet productivity"},
-    research_rockets = {"", "Rocket productivity"},
-    research_inventory_capacity = {"", "Character inventory slots"},
-    research_robot_battery = {"", "Worker robot battery"},
-    research_science_pack_productivity = {"", "Science pack productivity"},
-    research_walls = {"", "Wall productivity"},
-    research_tungsten = {"", "Tungsten productivity"}
-    research_inserters = {"", "Inserter productivity"}
-    research_belts = {"", "Belt productivity"}
-  }
-  if by_key[key] then return by_key[key] end
-  if spec.icon_item then return {"", {"item-name."..spec.icon_item}, " productivity"} end
-  if spec.items and #spec.items == 1 then return {"", {"item-name."..spec.items[1]}, " productivity"} end
-  if spec.icon_tech then return {"", {"technology-name."..spec.icon_tech}, " productivity"} end
-  return {"", "Productivity"}
+  local locale_key = "technology-name.more-infinite-research."..key
+  local out = {locale_key}
+  if spec.icon_item then
+    table.insert(out, {"item-name."..spec.icon_item})
+  elseif spec.items and #spec.items == 1 then
+    table.insert(out, {"item-name."..spec.items[1]})
+  elseif spec.icon_tech then
+    table.insert(out, {"technology-name."..spec.icon_tech})
+  end
+  return out
 end
 
 local function make_stream(key, spec)
   if not U.enabled_for(key) then return end
   if spec.hide_in_space_age and U.is_space_age() then return end
+
+  local base_cost = U.base_cost_for(key, spec)
+  local growth_factor = U.growth_factor_for(key, spec)
+  local max_level = U.max_level_for(key, spec)
+  local count_formula = tostring(base_cost) .. " * " .. tostring(growth_factor) .. "^(L-1)"
 
   if spec.direct_effects then
     local t = {
@@ -34,9 +33,9 @@ local function make_stream(key, spec)
       icons = U.icons_for_stream(spec),
       effects = spec.direct_effects,
       prerequisites = U.build_prereqs_for(key),
-      unit = { count_formula = tostring(C.shared.base_cost) .. " * " .. tostring(spec.growth_factor or C.shared.growth_factor) .. "^(L-1)", ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
+      unit = { count_formula = count_formula, ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
       upgrade = true,
-      max_level = "infinite",
+      max_level = max_level,
       order = "p["..key.."]"
     }
     if key == "research_rails" then
@@ -65,9 +64,9 @@ local function make_stream(key, spec)
     icons = U.icons_for_stream(spec),
     effects = effects,
     prerequisites = U.build_prereqs_for(key),
-    unit = { count_formula = tostring(C.shared.base_cost) .. " * " .. tostring(spec.growth_factor or C.shared.growth_factor) .. "^(L-1)", ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
+    unit = { count_formula = count_formula, ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
     upgrade = true,
-    max_level = "infinite",
+    max_level = max_level,
     order = "p["..key.."]"
   }
   if key == "research_rails" then
