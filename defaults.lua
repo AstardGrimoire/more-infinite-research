@@ -1,13 +1,13 @@
 local defaults = {
-  base_cost = {
-    research_inserter_speed = 8000
+  -- Global defaults used when a stream does not provide an override here or in its definition.
+  shared = {
+    base_cost = 8000,
+    growth_factor = 2,
+    max_level = 0 -- 0 or nil => infinite
   },
-  growth_factor = {
-    research_inserter_speed = 1.5
-  },
-  max_level = {
-    -- Use 0 or nil for infinite, positive integers to cap the level.
-    research_inserter_speed = 0
+  -- Per-stream overrides. Add, remove, or modify entries as needed.
+  streams = {
+    research_inventory_capacity = { base_cost = 8000, growth_factor = 1.10, max_level = 0 }
   }
 }
 

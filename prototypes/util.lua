@@ -22,22 +22,25 @@ local function ensure_minimum(value, fallback, minimum)
   return value
 end
 
+local function lookup_default(key, field, spec, fallback)
+  local stream_defaults = defaults.streams and defaults.streams[key]
+  if stream_defaults and stream_defaults[field] ~= nil then return stream_defaults[field] end
+  if spec and spec[field] ~= nil then return spec[field] end
+  local shared_defaults = defaults.shared or {}
+  if shared_defaults[field] ~= nil then return shared_defaults[field] end
+  return fallback
+end
+
 local function default_base_cost_for(key, spec)
-  if defaults.base_cost and defaults.base_cost[key] ~= nil then return defaults.base_cost[key] end
-  if spec and spec.base_cost then return spec.base_cost end
-  return C.shared.base_cost
+  return lookup_default(key, "base_cost", spec, C.shared.base_cost)
 end
 
 local function default_growth_for(key, spec)
-  if defaults.growth_factor and defaults.growth_factor[key] ~= nil then return defaults.growth_factor[key] end
-  if spec and spec.growth_factor then return spec.growth_factor end
-  return C.shared.growth_factor
+  return lookup_default(key, "growth_factor", spec, C.shared.growth_factor)
 end
 
 local function default_max_for(key, spec)
-  if defaults.max_level and defaults.max_level[key] ~= nil then return defaults.max_level[key] end
-  if spec and spec.max_level ~= nil then return spec.max_level end
-  return nil
+  return lookup_default(key, "max_level", spec, nil)
 end
 
 function U.base_cost_for(key, spec)

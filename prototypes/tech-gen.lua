@@ -2,6 +2,19 @@
 local C = require("prototypes.config")
 local U = require("prototypes.util")
 
+local function deepcopy(value)
+  if table.deepcopy then return table.deepcopy(value) end
+  local function copy(v)
+    if type(v) ~= "table" then return v end
+    local out = {}
+    for k, vv in pairs(v) do
+      out[copy(k)] = copy(vv)
+    end
+    return out
+  end
+  return copy(value)
+end
+
 local function lname(key, spec)
   local locale_key = "technology-name.more-infinite-research."..key
   local out = {locale_key}
@@ -24,14 +37,19 @@ local function make_stream(key, spec)
   local max_level = U.max_level_for(key, spec)
   local count_formula = tostring(base_cost) .. " * " .. tostring(growth_factor) .. "^(L-1)"
 
+  local direct_effects = nil
   if spec.direct_effects then
+    direct_effects = deepcopy(spec.direct_effects)
+  end
+
+  if direct_effects and #direct_effects > 0 then
     local t = {
       type = "technology",
       name = "recipe-prod-"..key.."-1",
       localised_name = lname(key, spec),
       localised_description = {""},
       icons = U.icons_for_stream(spec),
-      effects = spec.direct_effects,
+      effects = direct_effects,
       prerequisites = U.build_prereqs_for(key),
       unit = { count_formula = count_formula, ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
       upgrade = true,
@@ -47,7 +65,7 @@ local function make_stream(key, spec)
     return
   end
 
-  local buckets = require("prototypes.util").recipes_for_stream(spec)
+  local buckets = U.recipes_for_stream(spec)
   local effects = {}
   for _,b in ipairs(buckets) do
     for _,r in ipairs(b.recipes) do

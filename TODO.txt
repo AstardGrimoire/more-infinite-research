@@ -4,9 +4,9 @@
 for the follwing technologies, if they already exist in non-infinite form, extend them from the existing levels by adding an ininite research to the end, if they already exist in infinite form from another mod, don't change them:
 
 Train braking force, Lab research speed, Worker robot cargo size, Inserter capacity bonus, Weapon shooting speed, Laser turret shooting speed, Robot battery capacity.
-for the inserter capacity bonus, the stack inserter should have an exceptional rule that it's stack size is always rounded town to the nearest multiple of 4, such that the stack size would effectively increase by 4 every 4 levels insetad of 1 each level. This is to maintain compatibility with designs that implicitly use the stack inserter's capacity as a mutliple of 4 for belt stacking and optimization
+for the inserter capacity bonus, these extended levels should be 4x as expensive and increase the bonus by 4 at a time... This is to maintain compatibility with designs that implicitly use the stack inserter's capacity as a mutliple of 4 for belt stacking and optimization.
 
 
-i want the settings we provide to apply on a save by save basis so that you can enable different techs and requirements each. Does our startup settings approach support this? if not we will make that change for 1.2.0i want the settings we provide to apply on a save by save basis so that you can enable different techs and requirements each. Does our startup settings approach support this?
 
-Make the prereqs, base cost, cost increase, etc can be fully customized.
+
+i want the settings we provide to apply on a save by save basis so that you can enable different techs and requirements each. Does our startup settings approach support this?

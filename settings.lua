@@ -3,23 +3,25 @@ local defaults = require("defaults")
 
 local settings_data = {}
 
+local function lookup_default(key, field, stream, fallback)
+  local stream_defaults = defaults.streams and defaults.streams[key]
+  if stream_defaults and stream_defaults[field] ~= nil then return stream_defaults[field] end
+  if stream and stream[field] ~= nil then return stream[field] end
+  local shared_defaults = defaults.shared or {}
+  if shared_defaults[field] ~= nil then return shared_defaults[field] end
+  return fallback
+end
+
 local function default_base_cost(key, stream)
-  if defaults.base_cost and defaults.base_cost[key] ~= nil then return defaults.base_cost[key] end
-  return (stream and stream.base_cost) or C.shared.base_cost
+  return lookup_default(key, "base_cost", stream, C.shared.base_cost)
 end
 
 local function default_growth_factor(key, stream)
-  if defaults.growth_factor and defaults.growth_factor[key] ~= nil then return defaults.growth_factor[key] end
-  return (stream and stream.growth_factor) or C.shared.growth_factor
+  return lookup_default(key, "growth_factor", stream, C.shared.growth_factor)
 end
 
 local function default_max_level_setting(key, stream)
-  local ml
-  if defaults.max_level and defaults.max_level[key] ~= nil then
-    ml = defaults.max_level[key]
-  elseif stream then
-    ml = stream.max_level
-  end
+  local ml = lookup_default(key, "max_level", stream, 0)
   if ml == nil or ml == "infinite" then return 0 end
   local num = tonumber(ml)
   if not num or num <= 0 then return 0 end
@@ -66,7 +68,6 @@ local stream_order = {
   "research_modules",
   "research_belts",
   "research_inserters",
-  "research_inserter_speed",
   "research_bullets",
   "research_rockets",
   "research_inventory_capacity",
