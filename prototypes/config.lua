@@ -70,14 +70,6 @@ M.streams = {
     { change=0.10, items={"solar-panel","accumulator"} } 
   } },
   
-  research_inventory_capacity = { icon_tech = "toolbelt", direct_effects = { 
-    { type="character-inventory-slots-bonus", modifier=1 } 
-  } },
-
-  research_robot_battery = { icon_tech = "logistic-robotics", direct_effects = { 
-    { type="worker-robot-battery", modifier=0.10 } 
-  } },
-
   research_bullets = { icon_tech="military", groups = {
     { change=0.10, items={"firearm-magazine","shotgun-shell"} },
     { change=0.05, items={"piercing-rounds-magazine","piercing-shotgun-shell"} },
@@ -120,6 +112,14 @@ M.streams = {
         "agricultural-science-pack","metallurgic-science-pack","electromagnetic-science-pack","cryogenic-science-pack","prometheum-science-pack"
       }}
   }},
+
+  research_inventory_capacity = { icon_tech = "toolbelt", direct_effects = { 
+    { type="character-inventory-slots-bonus", modifier=1 } 
+  } },
+
+  research_robot_battery = { icon_tech = "logistic-robotics", direct_effects = { 
+    { type="worker-robot-battery", modifier=0.10 } 
+  } },
 
 }
 
