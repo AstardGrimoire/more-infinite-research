@@ -28,6 +28,11 @@ local function default_max_level_setting(key, stream)
   return math.floor(num)
 end
 
+local function default_enabled(key, stream)
+  local value = lookup_default(key, "enabled", stream, true)
+  return not not value
+end
+
 table.insert(settings_data, {
   type = "bool-setting",
   name = "ips-require-space-gate",
@@ -82,8 +87,6 @@ local stream_order = {
   "research_mining_drill"
 }
 
-local default_overrides = { research_inventory_capacity = false }
-
 local known = {}
 for _, key in ipairs(stream_order) do known[key] = true end
 
@@ -102,7 +105,7 @@ for _, key in ipairs(stream_order) do
       type = "bool-setting",
       name = "ips-enable-"..key,
       setting_type = "startup",
-      default_value = default_overrides[key] ~= nil and default_overrides[key] or true,
+      default_value = default_enabled(key, stream),
       order = "a-"..key,
       localised_name = {"mod-setting-name.ips-enable-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-enable-stream", tech_locale}

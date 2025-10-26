@@ -29,7 +29,7 @@ local function lname(key, spec)
 end
 
 local function make_stream(key, spec)
-  if not U.enabled_for(key) then return end
+  if not U.enabled_for(key, spec) then return end
   if spec.hide_in_space_age and U.is_space_age() then return end
 
   local base_cost = U.base_cost_for(key, spec)

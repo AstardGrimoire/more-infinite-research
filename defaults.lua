@@ -3,11 +3,12 @@ local defaults = {
   shared = {
     base_cost = 8000,
     growth_factor = 2,
-    max_level = 0 -- 0 or nil => infinite
+    max_level = 0, -- 0 or nil => infinite
+    enabled = true
   },
   -- Per-stream overrides. Add, remove, or modify entries as needed.
   streams = {
-    research_inventory_capacity = { base_cost = 8000, growth_factor = 1.10, max_level = 0 }
+    research_inventory_capacity = { base_cost = 8000, growth_factor = 1.10, max_level = 0, enabled = false }
   }
 }
 

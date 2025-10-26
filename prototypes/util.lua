@@ -7,7 +7,6 @@ local function has_tool(name) return (data.raw.tool or {})[name] ~= nil end
 local function has_tech(name) return (data.raw.technology or {})[name] ~= nil end
 
 function U.is_space_age() return mods and mods["space-age"] ~= nil end
-function U.enabled_for(key) local s=settings and settings.startup and settings.startup["ips-enable-"..key]; return (not s) or s.value end
 
 local function startup_setting(name)
   local s = settings and settings.startup and settings.startup[name]
@@ -41,6 +40,16 @@ end
 
 local function default_max_for(key, spec)
   return lookup_default(key, "max_level", spec, nil)
+end
+
+local function default_enabled_for(key, spec)
+  return lookup_default(key, "enabled", spec, true)
+end
+
+function U.enabled_for(key, spec)
+  local s = settings and settings.startup and settings.startup["ips-enable-"..key]
+  if s ~= nil then return s.value end
+  return default_enabled_for(key, spec)
 end
 
 function U.base_cost_for(key, spec)
@@ -151,7 +160,6 @@ local EXTRA = {
 
   research_belts               = { "space-science-pack" },
   research_inserters           = { "space-science-pack" },
-  research_inserter_speed      = { "space-science-pack" },
   research_bullets             = { "military-science-pack", "space-science-pack" },
 
   research_inventory_capacity  = { "agricultural-science-pack" },
