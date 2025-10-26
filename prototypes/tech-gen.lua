@@ -6,7 +6,13 @@ local function lname(key, spec)
   local by_key = {
     research_bullets = {"", "Bullet productivity"},
     research_rockets = {"", "Rocket productivity"},
-    research_inventory_capacity = {"", "Character inventory slots"}
+    research_inventory_capacity = {"", "Character inventory slots"},
+    research_robot_battery = {"", "Worker robot battery"},
+    research_science_pack_productivity = {"", "Science pack productivity"},
+    research_walls = {"", "Wall productivity"},
+    research_tungsten = {"", "Tungsten productivity"}
+    research_inserters = {"", "Inserter productivity"}
+    research_belts = {"", "Belt productivity"}
   }
   if by_key[key] then return by_key[key] end
   if spec.icon_item then return {"", {"item-name."..spec.icon_item}, " productivity"} end

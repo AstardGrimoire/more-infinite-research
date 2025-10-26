@@ -1,0 +1,31 @@
+
+
+
+for the follwing technologies, if they already exist in non-infinite form, extend them from the existing levels by adding an ininite research to the end, if they already exist in infinite form from another mod, don't change them:
+
+Train braking force, Lab research speed, Worker robot cargo size, Inserter capacity bonus, Weapon shooting speed, Laser turret shooting speed, Robot battery capacity.
+for the inserter capacity bonus, the stack inserter should have an exceptional rule that it's stack size is always rounded town to the nearest multiple of 4, such that the stack size would effectively increase by 4 every 4 levels insetad of 1 each level. This is to maintain compatibility with designs that implicitly use the stack inserter's capacity as a mutliple of 4 for belt stacking and optimization
+
+
+
+v1,  but more specifically:
+
+we have a mix up, there are three distinct researches here:
+Research productivity: increases productivity of labs and biolabs, stock.
+Science pack productivity: increases yield of science packs being crafted.
+Lab research speed: increases speed of labs and biolabs.
+Correct these, and make the icons as follows:
+Lab research speed same as Lab research speed stock.
+Science pack productivity same as Research productivity stock, or is no space age, Lab research speed stock.
+
+ALSO
+
+bioflux still is removed when loading my same with the productivity researched. And the research prods are still all wrong. Heres what were gonna do. Remove all our custom resaerches relating to lab speed, or resaerch pack productivity. then re create them by duplicating the existing space age lab research propdiuctivity research and make two copies: lab reaseach speed, extending the existing vanilla research of the same name out to infinity (that is swapping productivity for speed in this copy), as we did with worker robot cargo size. and science pack productivity, with will apply a productivity bonus to the science pack recipies.
+
+produce a zip and call it 1.1.0 for me to download
+
+
+
+i want the settings we provide to apply on a save by save basis so that you can enable different techs and requirements each. Does our startup settings approach support this? if not we will make that change for 1.2.0i want the settings we provide to apply on a save by save basis so that you can enable different techs and requirements each. Does our startup settings approach support this? if not we will make that change for 1.2.0
+
+Make the prereqs, base cost, cost increase, etc can be fully customized.

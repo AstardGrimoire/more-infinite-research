@@ -84,6 +84,13 @@ local EXTRA = {
 
 local function tool_exists(n) return (data.raw.tool or {})[n] ~= nil end
 local function add_if_exists(list, name) if tool_exists(name) then table.insert(list, name) end end
+local function merge_lists(a, b)
+  local out = {}
+  if a then for _,v in ipairs(a) do table.insert(out, v) end end
+  if b then for _,v in ipairs(b) do table.insert(out, v) end end
+  if #out == 0 then return nil end
+  return out
+end
 
 function U.pick_science_for_stream(_, key)
   local packs = {}
@@ -124,8 +131,36 @@ local function recipe_outputs(rec)
   return out
 end
 
-local function gather_by_items(items, patterns)
+local function recipe_uses_blocked_ingredient(rec, patterns)
+  if not patterns then return false end
+  local function matches(name)
+    for _,pat in ipairs(patterns) do
+      if string.find(name, pat) then return true end
+    end
+    return false
+  end
+  local function scan(def)
+    if not def or not def.ingredients then return false end
+    for _,ing in pairs(def.ingredients) do
+      local name = ing.name or ing[1]
+      if name and matches(name) then return true end
+    end
+    return false
+  end
+  if rec.normal or rec.expensive then
+    if scan(rec.normal) then return true end
+    if scan(rec.expensive) then return true end
+  else
+    if scan(rec) then return true end
+  end
+  return false
+end
+
+local function gather_by_items(items, patterns, options)
   local want = {}
+  options = options or {}
+  local exclude_recipe_patterns = options.exclude_recipe_patterns
+  local exclude_ingredient_patterns = options.exclude_ingredient_patterns
   if items then for _,n in ipairs(items) do want[n]=true end end
   if patterns then
     if data.raw.item then for iname,_ in pairs(data.raw.item) do for _,pat in ipairs(patterns) do if string.find(iname, pat) then want[iname]=true end end end end
@@ -136,16 +171,25 @@ local function gather_by_items(items, patterns)
   local strict_rail = want["rail"] == true
   local seen, list = {}, {}
   for rname, r in pairs(data.raw.recipe or {}) do
-    local outs = recipe_outputs(r)
-    local match = false
-    for it,_ in pairs(want) do
-      if strict_rail then
-        if it == "rail" and outs["rail"] then match=true; break end
-      else
-        if outs[it] then match=true; break end
+    local skip = false
+    if exclude_recipe_patterns then
+      for _,pat in ipairs(exclude_recipe_patterns) do
+        if string.find(rname, pat) then skip = true; break end
       end
     end
-    if match and not seen[rname] then seen[rname]=true; table.insert(list, rname) end
+    if not skip and recipe_uses_blocked_ingredient(r, exclude_ingredient_patterns) then skip = true end
+    if not skip then
+      local outs = recipe_outputs(r)
+      local match = false
+      for it,_ in pairs(want) do
+        if strict_rail then
+          if it == "rail" and outs["rail"] then match=true; break end
+        else
+          if outs[it] then match=true; break end
+        end
+      end
+      if match and not seen[rname] then seen[rname]=true; table.insert(list, rname) end
+    end
   end
   return list
 end
@@ -154,12 +198,18 @@ function U.recipes_for_stream(spec)
   if spec.groups then
     local buckets = {}
     for _,g in ipairs(spec.groups) do
-      local list = gather_by_items(g.items, g.item_patterns)
+      local list = gather_by_items(g.items, g.item_patterns, {
+        exclude_recipe_patterns = merge_lists(spec.exclude_recipe_patterns, g.exclude_recipe_patterns),
+        exclude_ingredient_patterns = merge_lists(spec.exclude_ingredient_patterns, g.exclude_ingredient_patterns)
+      })
       if #list > 0 then table.insert(buckets, {change=g.change or C.shared.per_level_default, recipes=list}) end
     end
     return buckets
   else
-    local list = gather_by_items(spec.items, spec.item_patterns or spec.extra_outputs)
+    local list = gather_by_items(spec.items, spec.item_patterns or spec.extra_outputs, {
+      exclude_recipe_patterns = spec.exclude_recipe_patterns,
+      exclude_ingredient_patterns = spec.exclude_ingredient_patterns
+    })
     return { {change=C.shared.per_level_default, recipes=list} }
   end
 end
