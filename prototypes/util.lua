@@ -3,6 +3,19 @@ local C = require("prototypes.config")
 local defaults = require("defaults")
 local U = {}
 
+local function deepcopy(value)
+  if table.deepcopy then return table.deepcopy(value) end
+  local function copy(v)
+    if type(v) ~= "table" then return v end
+    local out = {}
+    for k, vv in pairs(v) do
+      out[copy(k)] = copy(vv)
+    end
+    return out
+  end
+  return copy(value)
+end
+
 local function has_tool(name) return (data.raw.tool or {})[name] ~= nil end
 local function has_tech(name) return (data.raw.technology or {})[name] ~= nil end
 
@@ -119,7 +132,7 @@ end
 local PACKS_ALL = {
   "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack",
   "military-science-pack","utility-science-pack","space-science-pack",
-  "agricultural-science-pack","metallurgic-science-pack","electromagnetic-science-pack","cryogenic-science-pack","prometheum-science-pack"
+    "agricultural-science-pack","metallurgic-science-pack","electromagnetic-science-pack","cryogenic-science-pack","promethium-science-pack"
 }
 
 local EXTRA = {
@@ -177,9 +190,18 @@ local function merge_lists(a, b)
   return out
 end
 
-function U.pick_science_for_stream(_, key)
+function U.pick_science_for_stream(spec, key)
   local packs = {}
-  if key == "research_science_pack_productivity" then
+  local desired = spec and spec.science_packs
+  if desired == "all" then
+    for _,p in ipairs(PACKS_ALL) do add_if_exists(packs, p) end
+  elseif type(desired) == "table" then
+    for _,p in ipairs(desired) do add_if_exists(packs, p) end
+  elseif type(desired) == "string" then
+    local list = U.pack_list_for_extension(key, desired)
+    if not list then list = U.pack_list_for_extension(desired) end
+    if list then for _,p in ipairs(list) do add_if_exists(packs, p) end end
+  elseif key == "research_science_pack_productivity" then
     for _,p in ipairs(PACKS_ALL) do add_if_exists(packs, p) end
   else
     for _,p in ipairs({"automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack"}) do add_if_exists(packs, p) end
@@ -190,14 +212,43 @@ function U.pick_science_for_stream(_, key)
   return out
 end
 
+function U.pack_list_all()
+  return deepcopy(PACKS_ALL)
+end
+
+function U.pack_list_for_extension(key, desired)
+  if desired == "all" then
+    return U.pack_list_all()
+  end
+  if type(desired) == "table" then
+    local out = {}
+    for _, name in ipairs(desired) do table.insert(out, name) end
+    return out
+  end
+  local map = {
+    ["braking-force"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","space-science-pack" },
+    ["research-speed"] = PACKS_ALL,
+    ["worker-robots-storage"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","agricultural-science-pack" },
+    ["inserter-capacity-bonus"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","agricultural-science-pack" },
+    ["weapon-shooting-speed"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","military-science-pack","space-science-pack" },
+    ["laser-shooting-speed"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","military-science-pack","space-science-pack" },
+    ["research_electric_shooting_speed"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","military-science-pack","electromagnetic-science-pack" },
+    ["research_flamethrower_shooting_speed"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","military-science-pack","space-science-pack" },
+    ["research_rocket_shooting_speed"] = { "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack","military-science-pack","agricultural-science-pack" }
+  }
+  local list = map[key]
+  if not list then return nil end
+  return deepcopy(list)
+end
+
 function U.build_prereqs_for(key)
-  local packs = U.pick_science_for_stream({}, key)
+  local packs = U.pick_science_for_stream(C.streams[key], key)
   local reqs, seen = {}, {}
   local function add(t) if t and has_tech(t) and not seen[t] then seen[t]=true; table.insert(reqs,t) end end
   for _,pair in ipairs(packs) do add(pair[1]) end
   local gate_on = (settings and settings.startup and settings.startup["ips-require-space-gate"] and settings.startup["ips-require-space-gate"].value) ~= false
   if gate_on then
-    local PROM = "prometheum-science-pack"
+    local PROM = "promethium-science-pack"
     local SPACE = "space-science-pack"
     if U.is_space_age() and tool_exists(PROM) and has_tech(PROM) then add(PROM) else if tool_exists(SPACE) and has_tech(SPACE) then add(SPACE) end end
   end

@@ -31,6 +31,7 @@ end
 local function make_stream(key, spec)
   if not U.enabled_for(key, spec) then return end
   if spec.hide_in_space_age and U.is_space_age() then return end
+  if spec.requires_space_age and not U.is_space_age() then return end
 
   local base_cost = U.base_cost_for(key, spec)
   local growth_factor = U.growth_factor_for(key, spec)
@@ -42,6 +43,13 @@ local function make_stream(key, spec)
     direct_effects = deepcopy(spec.direct_effects)
   end
 
+  local ingredients = U.pick_science_for_stream(spec, key)
+  if spec and spec.science_packs then
+    local names = {}
+    for _, entry in ipairs(ingredients) do table.insert(names, entry[1]) end
+    log("[more-infinite-research] Science packs for "..key..": "..table.concat(names, ", "))
+  end
+
   if direct_effects and #direct_effects > 0 then
     local t = {
       type = "technology",
@@ -51,10 +59,15 @@ local function make_stream(key, spec)
       icons = U.icons_for_stream(spec),
       effects = direct_effects,
       prerequisites = U.build_prereqs_for(key),
-      unit = { count_formula = count_formula, ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
+      unit = {
+        count_formula = count_formula,
+        ingredients = ingredients,
+        time = C.shared.research_time
+      },
       upgrade = true,
       max_level = max_level,
-      order = "p["..key.."]"
+      order = "p["..key.."]",
+      level = 1
     }
     if key == "research_rails" then
       t.icons = nil
@@ -72,7 +85,10 @@ local function make_stream(key, spec)
       table.insert(effects, { type="change-recipe-productivity", recipe=r, change=b.change or C.shared.per_level_default })
     end
   end
-  if #effects == 0 then return end
+  if #effects == 0 then
+    log("[more-infinite-research] Skipping stream "..key.." because no matching recipes were found.")
+    return
+  end
 
   local t = {
     type = "technology",
@@ -82,10 +98,15 @@ local function make_stream(key, spec)
     icons = U.icons_for_stream(spec),
     effects = effects,
     prerequisites = U.build_prereqs_for(key),
-    unit = { count_formula = count_formula, ingredients = U.pick_science_for_stream(spec, key), time = C.shared.research_time },
+    unit = {
+      count_formula = count_formula,
+      ingredients = ingredients,
+      time = C.shared.research_time
+    },
     upgrade = true,
     max_level = max_level,
-    order = "p["..key.."]"
+    order = "p["..key.."]",
+    level = 1
   }
   if key == "research_rails" then
     t.icons = nil
@@ -93,6 +114,7 @@ local function make_stream(key, spec)
     t.icon_size = 64
   end
   data:extend({t})
+  log("[more-infinite-research] Registered technology "..t.name)
 end
 
 for key, spec in pairs(require("prototypes.config").streams) do

@@ -2,6 +2,7 @@ local C = require("prototypes.config")
 local defaults = require("defaults")
 
 local settings_data = {}
+local base_defaults = defaults.base_extensions or {}
 
 local function lookup_default(key, field, stream, fallback)
   local stream_defaults = defaults.streams and defaults.streams[key]
@@ -84,7 +85,10 @@ local stream_order = {
   "research_electric_energy",
   "research_concrete",
   "research_furnace",
-  "research_mining_drill"
+  "research_mining_drill",
+  "research_rocket_shooting_speed",
+  "research_flamethrower_shooting_speed",
+  "research_electric_shooting_speed"
 }
 
 local known = {}
@@ -106,7 +110,7 @@ for _, key in ipairs(stream_order) do
       name = "ips-enable-"..key,
       setting_type = "startup",
       default_value = default_enabled(key, stream),
-      order = "a-"..key,
+      order = "b-"..key.."-0",
       localised_name = {"mod-setting-name.ips-enable-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-enable-stream", tech_locale}
     })
@@ -117,7 +121,7 @@ for _, key in ipairs(stream_order) do
       default_value = default_base_cost(key, stream),
       minimum_value = 1,
       maximum_value = 2147483647,
-      order = "b-"..key.."-base",
+      order = "b-"..key.."-1",
       localised_name = {"mod-setting-name.ips-cost-base-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-cost-base-stream", tech_locale}
     })
@@ -127,7 +131,7 @@ for _, key in ipairs(stream_order) do
       setting_type = "startup",
       default_value = default_growth_factor(key, stream),
       minimum_value = 1,
-      order = "b-"..key.."-growth",
+      order = "b-"..key.."-2",
       localised_name = {"mod-setting-name.ips-cost-growth-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-cost-growth-stream", tech_locale}
     })
@@ -138,11 +142,75 @@ for _, key in ipairs(stream_order) do
       default_value = default_max_level_setting(key, stream),
       minimum_value = 0,
       maximum_value = 2147483647,
-      order = "b-"..key.."-max",
+      order = "b-"..key.."-3",
       localised_name = {"mod-setting-name.ips-max-level-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-max-level-stream", tech_locale}
     })
   end
+end
+
+local base_extensions = {
+  { key = "braking-force", order = "c-01" },
+  { key = "research-speed", order = "c-02" },
+  { key = "worker-robots-storage", order = "c-03" },
+  { key = "inserter-capacity-bonus", order = "c-04" },
+  { key = "weapon-shooting-speed", order = "c-05" },
+  { key = "laser-shooting-speed", order = "c-06" }
+}
+
+for _, spec in ipairs(base_extensions) do
+  local defaults_spec = base_defaults[spec.key] or {}
+  local enabled_default = defaults_spec.enabled
+  if enabled_default == nil then enabled_default = true end
+  local base_default = tonumber(defaults_spec.base_cost) or 0
+  if base_default < 0 then base_default = 0 end
+  local growth_default = tonumber(defaults_spec.growth_factor) or 0
+  if growth_default < 0 then growth_default = 0 end
+  local research_time_default = tonumber(defaults_spec.research_time) or 60
+  if research_time_default < 1 then research_time_default = 60 end
+  local locale = {"technology-name."..spec.key}
+  local base_order = spec.order .. "-a"
+  table.insert(settings_data, {
+    type = "bool-setting",
+    name = "mir-enable-"..spec.key,
+    setting_type = "startup",
+    default_value = enabled_default,
+    order = base_order.."",
+    localised_name = {"mod-setting-name.mir-enable-base-tech", locale},
+    localised_description = {"mod-setting-description.mir-enable-base-tech", locale}
+  })
+  table.insert(settings_data, {
+    type = "int-setting",
+    name = "mir-cost-base-"..spec.key,
+    setting_type = "startup",
+    default_value = math.floor(base_default + 0.5),
+    minimum_value = 0,
+    maximum_value = 2147483647,
+    order = base_order.."-1",
+    localised_name = {"mod-setting-name.mir-cost-base", locale},
+    localised_description = {"mod-setting-description.mir-cost-base", locale}
+  })
+  table.insert(settings_data, {
+    type = "double-setting",
+    name = "mir-cost-growth-"..spec.key,
+    setting_type = "startup",
+    default_value = growth_default,
+    minimum_value = 0,
+    order = base_order.."-2",
+    localised_name = {"mod-setting-name.mir-cost-growth", locale},
+    localised_description = {"mod-setting-description.mir-cost-growth", locale}
+  })
+  table.insert(settings_data, {
+    type = "int-setting",
+    name = "mir-research-time-"..spec.key,
+    setting_type = "startup",
+    default_value = math.floor(research_time_default + 0.5),
+    minimum_value = 1,
+    maximum_value = 2147483647,
+    order = base_order.."-3",
+    localised_name = {"mod-setting-name.mir-research-time", locale},
+    localised_description = {"mod-setting-description.mir-research-time", locale}
+  })
 end
 
 data:extend(settings_data)

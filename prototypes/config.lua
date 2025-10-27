@@ -64,7 +64,7 @@ M.streams = {
     { change = 0.20, items = { "burner-mining-drill" } }, 
     { change = 0.10, items = { "electric-mining-drill" } }, 
     { change = 0.05, items = { "big-mining-drill" }, item_patterns = { "^big%-mining%-drill$" } } 
-  } }
+  } },
   
   research_electric_energy = { icon_tech="electric-energy-accumulators", groups = { 
     { change=0.10, items={"solar-panel","accumulator"} } 
@@ -109,7 +109,7 @@ M.streams = {
       { change=0.10, items={
         "automation-science-pack","logistic-science-pack","chemical-science-pack","production-science-pack",
         "military-science-pack","utility-science-pack","space-science-pack",
-        "agricultural-science-pack","metallurgic-science-pack","electromagnetic-science-pack","cryogenic-science-pack","prometheum-science-pack"
+        "agricultural-science-pack","metallurgic-science-pack","electromagnetic-science-pack","cryogenic-science-pack","promethium-science-pack"
       }}
   }},
 
@@ -120,6 +120,40 @@ M.streams = {
   research_robot_battery = { icon_tech = "logistic-robotics", direct_effects = { 
     { type="worker-robot-battery", modifier=0.10 } 
   } },
+
+  research_rocket_shooting_speed = {
+    icon_tech = "rocket-turret",
+    science_packs = {
+      "automation-science-pack","logistic-science-pack","chemical-science-pack",
+      "production-science-pack","military-science-pack","agricultural-science-pack"
+    },
+    direct_effects = {
+    { type = "gun-speed", ammo_category = "rocket", modifier = 0.1 },
+    { type = "gun-speed", ammo_category = "cannon-shell", modifier = 0.1 }
+    }
+  },
+
+  research_flamethrower_shooting_speed = {
+    icon_tech = "flamethrower",
+    science_packs = {
+      "automation-science-pack","logistic-science-pack","chemical-science-pack",
+      "production-science-pack","military-science-pack","space-science-pack"
+    },
+    direct_effects = {
+    { type = "gun-speed", ammo_category = "flamethrower", modifier = 0.1 }
+    }
+  },
+
+  research_electric_shooting_speed = {
+    icon_tech = "tesla-weapons",
+    science_packs = {
+      "automation-science-pack","logistic-science-pack","chemical-science-pack",
+      "production-science-pack","military-science-pack","electromagnetic-science-pack"
+    },
+    direct_effects = {
+    { type = "gun-speed", ammo_category = "electric", modifier = 0.1 }
+    }
+  },
 
 }
 
