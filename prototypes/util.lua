@@ -55,6 +55,10 @@ local function default_max_for(key, spec)
   return lookup_default(key, "max_level", spec, nil)
 end
 
+local function default_research_time_for(key, spec)
+  return lookup_default(key, "research_time", spec, C.shared.research_time)
+end
+
 local function default_enabled_for(key, spec)
   return lookup_default(key, "enabled", spec, true)
 end
@@ -77,6 +81,16 @@ function U.growth_factor_for(key, spec)
   local value = startup_setting("ips-cost-growth-"..key)
   if value ~= nil then return ensure_minimum(value, default, 1) end
   return ensure_minimum(default, C.shared.growth_factor, 1)
+end
+
+function U.research_time_for(key, spec)
+  local default = ensure_minimum(default_research_time_for(key, spec), C.shared.research_time, 1)
+  local value = startup_setting("ips-research-time-"..key)
+  if value ~= nil then
+    if value <= 0 then return default end
+    return ensure_minimum(value, default, 1)
+  end
+  return default
 end
 
 local function coerce_max_level(value)

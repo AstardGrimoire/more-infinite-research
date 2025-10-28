@@ -37,6 +37,7 @@ local function make_stream(key, spec)
   local growth_factor = U.growth_factor_for(key, spec)
   local max_level = U.max_level_for(key, spec)
   local count_formula = tostring(base_cost) .. " * " .. tostring(growth_factor) .. "^(L-1)"
+  local research_time = U.research_time_for(key, spec)
 
   local direct_effects = nil
   if spec.direct_effects then
@@ -62,7 +63,7 @@ local function make_stream(key, spec)
       unit = {
         count_formula = count_formula,
         ingredients = ingredients,
-        time = C.shared.research_time
+        time = research_time
       },
       upgrade = true,
       max_level = max_level,
@@ -101,7 +102,7 @@ local function make_stream(key, spec)
     unit = {
       count_formula = count_formula,
       ingredients = ingredients,
-      time = C.shared.research_time
+      time = research_time
     },
     upgrade = true,
     max_level = max_level,

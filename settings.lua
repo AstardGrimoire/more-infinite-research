@@ -29,6 +29,11 @@ local function default_max_level_setting(key, stream)
   return math.floor(num)
 end
 
+local function default_research_time_setting(key, stream)
+  local value = lookup_default(key, "research_time", stream, C.shared.research_time)
+  if not value or value <= 0 then value = C.shared.research_time end
+  return math.floor(value + 0.5)
+end
 local function default_enabled(key, stream)
   local value = lookup_default(key, "enabled", stream, true)
   return not not value
@@ -151,6 +156,17 @@ for _, key in ipairs(stream_order) do
       localised_name = {"mod-setting-name.ips-max-level-stream", tech_locale},
       localised_description = {"mod-setting-description.ips-max-level-stream", tech_locale}
     })
+    table.insert(settings_data, {
+      type = "int-setting",
+      name = "ips-research-time-"..key,
+      setting_type = "startup",
+      default_value = default_research_time_setting(key, stream),
+      minimum_value = 0,
+      maximum_value = 2147483647,
+      order = "b-"..key.."-4",
+      localised_name = {"mod-setting-name.mir-research-time", tech_locale},
+      localised_description = {"mod-setting-description.mir-research-time", tech_locale}
+    })
   end
 end
 
@@ -173,6 +189,17 @@ for _, spec in ipairs(base_extensions) do
   if growth_default < 0 then growth_default = 0 end
   local research_time_default = tonumber(defaults_spec.research_time) or 60
   if research_time_default < 1 then research_time_default = 60 end
+  local max_level_default = defaults_spec.max_level
+  if max_level_default == nil or max_level_default == "infinite" then
+    max_level_default = 0
+  else
+    local num = tonumber(max_level_default)
+    if not num or num <= 0 then
+      max_level_default = 0
+    else
+      max_level_default = math.floor(num + 0.5)
+    end
+  end
   local locale = {"technology-name."..spec.key}
   local base_order = spec.order .. "-a"
   table.insert(settings_data, {
@@ -207,12 +234,23 @@ for _, spec in ipairs(base_extensions) do
   })
   table.insert(settings_data, {
     type = "int-setting",
+    name = "mir-max-level-"..spec.key,
+    setting_type = "startup",
+    default_value = max_level_default,
+    minimum_value = 0,
+    maximum_value = 2147483647,
+    order = base_order.."-3",
+    localised_name = {"mod-setting-name.ips-max-level-stream", locale},
+    localised_description = {"mod-setting-description.ips-max-level-stream", locale}
+  })
+  table.insert(settings_data, {
+    type = "int-setting",
     name = "mir-research-time-"..spec.key,
     setting_type = "startup",
     default_value = math.floor(research_time_default + 0.5),
-    minimum_value = 1,
+    minimum_value = 0,
     maximum_value = 2147483647,
-    order = base_order.."-3",
+    order = base_order.."-4",
     localised_name = {"mod-setting-name.mir-research-time", locale},
     localised_description = {"mod-setting-description.mir-research-time", locale}
   })

@@ -169,7 +169,7 @@ M.streams = {
       "electromagnetic-science-pack"
     },
     direct_effects = {
-      { type = "character-mining-speed", modifier = 0.1 }
+      { type = "character-mining-speed", modifier = 0.05 }
     }
   },
 
@@ -180,7 +180,7 @@ M.streams = {
       "electromagnetic-science-pack"
     },
     direct_effects = {
-      { type = "character-crafting-speed", modifier = 0.1 }
+      { type = "character-crafting-speed", modifier = 0.05 }
     }
   },
 
@@ -191,7 +191,7 @@ M.streams = {
       "electromagnetic-science-pack"
     },
     direct_effects = {
-      { type = "character-running-speed", modifier = 0.1 }
+      { type = "character-running-speed", modifier = 0.05 }
     }
   },
 

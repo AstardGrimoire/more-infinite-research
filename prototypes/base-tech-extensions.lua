@@ -51,6 +51,20 @@ local function sanitize_number(value)
   return value
 end
 
+local function coerce_max_level_value(value)
+  if value == nil then return "infinite" end
+  if value == "infinite" then return "infinite" end
+  if type(value) == "number" then
+    if value <= 0 then return "infinite" end
+    return math.floor(value + 0.5)
+  end
+  if type(value) == "string" then
+    local num = tonumber(value)
+    if not num or num <= 0 then return "infinite" end
+    return math.floor(num + 0.5)
+  end
+  return "infinite"
+end
 local function build_prerequisites(previous_name, last_prereqs)
   local out, seen = {}, {}
   if last_prereqs then
@@ -208,10 +222,9 @@ local function extend_chain(key)
   local new_name = key .. "-" .. desired_new_level
   if data.raw.technology[new_name] then return end
 
-  local max_level_setting = spec.max_level
-  local max_level_value = "infinite"
-  if type(max_level_setting) == "number" and max_level_setting > 0 then
-    max_level_value = max_level_setting
+  local max_level_value = coerce_max_level_value(startup_setting("mir-max-level-" .. key))
+  if max_level_value == "infinite" then
+    max_level_value = coerce_max_level_value(spec.max_level)
   end
 
   local last_count = base_tech.unit.count
