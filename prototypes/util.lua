@@ -121,6 +121,15 @@ local function icon_from_item(name)
   return nil
 end
 function U.icons_for_stream(stream)
+  if stream.icons then
+    return deepcopy(stream.icons)
+  end
+  if stream.icon then
+    local entry = { icon = stream.icon, icon_size = stream.icon_size or 64 }
+    if stream.icon_mipmaps then entry.icon_mipmaps = stream.icon_mipmaps end
+    if stream.icon_tint then entry.tint = stream.icon_tint end
+    return { entry }
+  end
   if stream.icon_tech then
     local ic = icons_from_tech(stream.icon_tech)
     if ic then return ic end
@@ -176,6 +185,7 @@ local EXTRA = {
   research_bullets             = { "military-science-pack", "space-science-pack" },
 
   research_inventory_capacity  = { "agricultural-science-pack" },
+  research_character_trash_slots = { "agricultural-science-pack" },
   research_robot_battery       = { "space-science-pack" },
   research_science_pack_productivity = {}
 }

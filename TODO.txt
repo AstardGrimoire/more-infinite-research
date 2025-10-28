@@ -1,7 +1,12 @@
+ 
+character-reach-distance, character-build-distance, character-resource-reach-distance, character-item-drop-distance, character-logistic-trash-slots, character-additional-item-drop-distance, character-item-pickup-distance
 
+character-mining-speed, 
+character-crafting-speed, 
+character-running-speed,
 
-
-for the follwing technologies, if they already exist in non-infinite form, extend them from the existing levels by adding an ininite research to the end, if they already exist in infinite form from another mod, don't change them:
-
-Train braking force, Lab research speed, Worker robot cargo size, Inserter capacity bonus, Weapon shooting speed, Laser turret shooting speed.
-for the inserter capacity bonus, these extended levels should be 4x as expensive and increase the bonus by 4 at a time... This is to maintain compatibility with designs that implicitly use the stack inserter's capacity as a mutliple of 4 for belt stacking and optimization.
+worker-robot-energy-consumption
+spidertron-working-range
+train-reverse-speed-bonus
+space-platform-speed
+space-platform-inventory-bonus

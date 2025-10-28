@@ -76,19 +76,24 @@ local stream_order = {
   "research_inserters",
   "research_bullets",
   "research_rockets",
-  "research_inventory_capacity",
-  "research_robot_battery",
-  "research_science_pack_productivity",
   "research_walls",
   "research_grenades",
   "research_rails",
-  "research_electric_energy",
   "research_concrete",
   "research_furnace",
   "research_mining_drill",
+  "research_electric_energy",
+  "research_science_pack_productivity",
   "research_rocket_shooting_speed",
   "research_flamethrower_shooting_speed",
-  "research_electric_shooting_speed"
+  "research_electric_shooting_speed",
+  "research_character_mining_speed",
+  "research_character_crafting_speed",
+  "research_character_walking_speed",
+  "research_character_reach",
+  "research_character_trash_slots",
+  "research_inventory_capacity",
+  "research_robot_battery"
 }
 
 local known = {}
