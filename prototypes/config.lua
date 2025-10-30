@@ -206,8 +206,7 @@ M.streams = {
       { type = "character-reach-distance", modifier = 10 },
       { type = "character-build-distance", modifier = 10 },
       { type = "character-resource-reach-distance", modifier = 10 },
-      { type = "character-item-drop-distance", modifier = 10 },
-      { type = "character-item-pickup-distance", modifier = 10 }
+      { type = "character-item-drop-distance", modifier = 10 }
     }
   },
 

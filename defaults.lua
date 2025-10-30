@@ -13,6 +13,7 @@ local defaults = {
     research_character_trash_slots = { growth_factor = 1.10, enabled = false },
     research_robot_battery = { growth_factor = 1.2 },
     research_science_pack_productivity = { research_time = 120 },
+    research_character_reach = { enabled = false },
     research_rocket_shooting_speed = {
       base_cost = 60,
       growth_factor = 1.5,
