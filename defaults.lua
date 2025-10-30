@@ -10,7 +10,7 @@ local defaults = {
   -- Per-stream overrides. Add, remove, or modify entries as needed.
   streams = {
     research_inventory_capacity = { growth_factor = 1.10, enabled = false },
-    research_character_trash_slots = { growth_factor = 1.10, enabled = false },
+    research_character_trash_slots = { growth_factor = 1.10 },
     research_robot_battery = { growth_factor = 1.2 },
     research_science_pack_productivity = { research_time = 120 },
     research_character_reach = { enabled = false },
